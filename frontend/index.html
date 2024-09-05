@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Document</title>
+</head>
+
+<body class="has-text-black">
+  <div style="position: relative;">
+    <h1 class="title has-text-black has-text-centered mt-5">
+      GESTOR DE TAREAS
+    </h1>
+    <button class="button mb-5" id="toggle-dark-mode">
+      <span class="icon is-small">
+        <img id="toggle-image" src="assets/moon-solid.svg">
+      </span>
+    </button>
+  </div>
+  <div class="interstice is-flex is-justify-content-end pr-3">
+    <button class="interstice js-modal-trigger button mb-5 add-task" data-target="modal-js-example">
+      Agregar tarea
+    </button>
+    <button class="interstice js-modal-trigger js-modal-trigger-mobile button mb-5 add-task-mobile" data-target="modal-js-example">
+      <span>+</span>
+    </button>
+  </div>
+  <div class="columns">
+    <div id="Backlog" class="column">
+      <div class="level">
+        <div class="level-item">
+          <figure class="image is-16x16">
+            <img src="assets/menu-hamburguesa.png" alt="Menu icon">
+          </figure>
+        </div>
+        <div class="level-item">
+          <h2 class="is-size-4">BACKLOG</h2>
+        </div>
+      </div>
+    </div>
+    <div id="To Do" class="column">
+      <div class="level">
+        <div class="level-item">
+          <figure class="image is-16x16">
+            <img src="assets/menu-hamburguesa.png" alt="Menu icon">
+          </figure>
+        </div>
+        <div class="level-item">
+          <h2 class="is-size-4">TO DO</h2>
+        </div>
+      </div>
+    </div>
+    <div id="In Progress" class="column">
+      <div class="level">
+        <div class="level-item">
+          <figure class="image is-16x16">
+            <img src="assets/angulo-derecho.png" alt="Menu icon">
+          </figure>
+        </div>
+        <div class="level-item">
+          <h2 class="is-size-4">IN PROGRESS</h2>
+        </div>
+      </div>
+    </div>
+    <div id="Blocked" class="column">
+      <div class="level">
+        <div class="level-item">
+          <figure class="image is-16x16">
+            <img src="assets/cruz.png" alt="Menu icon">
+          </figure>
+        </div>
+        <div class="level-item">
+          <h2 class="is-size-4">BLOCKED</h2>
+        </div>
+      </div>
+    </div>
+    <div id="Done" class="column">
+      <div class="level">
+        <div class="level-item">
+          <figure class="image is-16x16">
+            <img src="assets/controlar.png" alt="Menu icon">
+          </figure>
+        </div>
+        <div class="level-item">
+          <h2 class="is-size-4">DONE</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="addcard">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Modal title</p>
+        <button onclick="handleCardCancel()" class="delete" aria-label="close"></button>
+      </header>
+      <form class="modal-card-body">
+        <div class="control">
+          <label class="label">Nombre de la tarea</label>
+          <input class="input" id="title" type="text" placeholder="Text input">
+          <span id="errorTitle" class="error"></span>
+        </div>
+        <div class="field">
+          <label class="label">Descripción de la tarea</label>
+          <div class="control">
+            <textarea id="description" class="input" placeholder="Textarea"></textarea>
+            <span id="errorDescription" class="error"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Asignado</label>
+          <div class="control">
+            <input type="text" id="assigned" class="input">
+          </div>
+        </div>
+        <div class="field is-flex is-justify-content-space-between">
+          <div class="control">
+            <label class="label">Estado</label>
+            <div class="select">
+              <select id="state">
+                <option value="Backlog">Backlog</option>
+                <option value="To Do">To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Done">Done</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Prioridad</label>
+            <div class="control">
+              <div class="select">
+                <select id="priority">
+                  <option value="High">Alta</option>
+                  <option value="Medium">Media</option>
+                  <option value="Low">Baja</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Fecha Límite</label>
+          <div class="control">
+            <input id="deadline" class="input" type="date">
+            <span id="errorDeadLine" class="error"></span>
+          </div>
+        </div>
+
+        </section>
+        <footer class="py-2 is-flex is-justify-content-space-between">
+          <button onclick="handleCardCancel()" type="button" class="button">Cancelar</button>
+          <button onclick="handleCardSave()" type="button" class="button is-success">Guardar cambios</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="edit-card">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Editar Tarea</p>
+        <button onclick="handleCardCancel()" class="delete" aria-label="close"></button>
+      </header>
+      <form class="modal-card-body">
+        <label class="label">Nombre de la tarea</label>
+        <div class="control">
+          <input class="input" id="edit-title" type="text" placeholder="Text input">
+          <span id="edit-errorTitle" class="error"></span>
+        </div>
+        <div class="field">
+          <label class="label">Descripción de la tarea</label>
+          <div class="control">
+            <textarea id="edit-description" class="input" placeholder="Textarea"></textarea>
+            <span id="edit-errorDescription" class="error"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Asignado</label>
+          <div class="control">
+            <input type="text" id="edit-assigned" class="input">
+          </div>
+        </div>
+        <div class="field is-flex is-justify-content-space-between">
+          <div class="field">
+            <label class="label">Estado</label>
+            <div class="control">
+              <div class="select">
+                <select id="edit-state">
+                  <option value="Backlog">Backlog</option>
+                  <option value="To Do">To Do</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Blocked">Blocked</option>
+                  <option value="Done">Done</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Prioridad</label>
+            <div class="control">
+              <div class="select">
+                <select id="edit-priority">
+                  <option value="High">Alta</option>
+                  <option value="Medium">Media</option>
+                  <option value="Low">Baja</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Fecha Límite</label>
+          <div class="control">
+            <input id="edit-deadline" class="input" type="date">
+            <span id="edit-errorDeadLine" class="error"></span>
+          </div>
+        </div>
+        <footer class="modal-card-foot">
+          <div class="buttons">
+            <button onclick="handleCardDelete()" type="button" class="button is-danger">Eliminar</button>
+            <button onclick="handleCardCancel()" type="button" class="button">Cancelar</button>
+            <button onclick="handleCardSaveEdit()" type="button" class="button is-success">Guardar cambios</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <template id="card">
+    <div class="card draggable" style="position: relative;">
+      <div class="card-header">
+        <span class="priority text-highlight">
+          <figure class="image is-16x16">
+            <img src="assets/Icon-Flag.png" alt="Priority flag icon"> Alta
+          </figure>
+        </span>
+        <h5 class="title is-size-5">Título de la Tarea</h5>
+      </div>
+      <figure class="image is-20x20 edit-icon">
+        <img src="assets/edit.png" alt="Description of image">
+      </figure>
+      <p class="description is-size-6">Descripción de la tarea</p>
+      <div class="card-footer">
+        <span class="deadline text-highlight">
+          <figure class="image is-16x16">
+            <img src="assets/Icon-Calendar.png" alt="Calendar icon"> 01/09/2024
+          </figure>
+        </span>
+      </div>
+    </div>
+  </template>
+
+  <script src="src/apiInteraction.js" defer></script>
+  <script src="src/editHelper.js" defer></script>
+  <script src="src/dragHelpers.js" defer></script>
+  <script src="src/script.js" defer></script>
+  <script src="src/darkLightMode.js" defer></script>
+</body>
+
+</html>
